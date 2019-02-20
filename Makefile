@@ -4,3 +4,5 @@ build_1_5:
 build_1_6:
 	docker build -t articulate/articulate-golang:1.6 1.6/
 
+build_1_11:
+	docker build -t articulate/articulate-golang:1.11 1.11/
