@@ -1,6 +1,8 @@
 FROM golang:1.12
 
-ENV SERVICE_ROOT /go/src/github.com/articulate/service
+# With go modules enabled there is no need to create a service dir in the normal GOPATH
+ENV GO111MODULE on
+ENV SERVICE_ROOT /service
 ENV SERVICE_USER service
 
 ADD https://raw.githubusercontent.com/articulate/docker-consul-template-bootstrap/master/install.sh /tmp/consul_template_install.sh
