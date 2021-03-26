@@ -1,17 +1,17 @@
-build_1_5:
-	docker build -t articulate/articulate-golang:1.5 1.5/
+all: 1.6 1.12 1.13 1.16
 
-build_1_6:
-	docker build -t articulate/articulate-golang:1.6 1.6/
+1.6:
+	docker build -t articulate/articulate-golang:1.6 1.6
+.PHONY: 1.6
 
-build_1_11:
-	docker build -t articulate/articulate-golang:1.11 1.11/
+1.12:
+	docker build -t articulate/articulate-golang:1.12 1.12
+.PHONY: 1.12
 
-build_1_12:
-	docker build -t articulate/articulate-golang:1.12 1.12/
+1.13:
+	docker build -t articulate/articulate-golang:1.13 1.13
+.PHONY: 1.13
 
-build_1_13:
-	docker build -t articulate/articulate-golang:1.13 1.13/
-
-build_1_16:
-	docker build -t articulate/articulate-golang:1.16 1.16/
+1.16:
+	docker build -t articulate/articulate-golang:1.16 1.16
+.PHONY: 1.16
