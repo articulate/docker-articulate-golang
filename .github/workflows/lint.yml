@@ -14,7 +14,7 @@ jobs:
           - "1.13"
           - "1.16"
     steps:
-      - uses: actions/checkout@v2
-      - uses: hadolint/hadolint-action@v1.6.0
+      - uses: actions/checkout@v3
+      - uses: hadolint/hadolint-action@0a6d062e780d218ea909a18365e0ab2e36d09612 # pin@v2.0.0
         with:
           dockerfile: ${{ matrix.image }}/Dockerfile
