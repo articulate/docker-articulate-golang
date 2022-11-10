@@ -1,3 +1,4 @@
+# syntax=docker/dockerfile:1
 FROM golang:1.12
 
 # With go modules enabled there is no need to create a service dir in the normal GOPATH
@@ -5,13 +6,23 @@ ENV GO111MODULE on
 ENV SERVICE_ROOT /service
 ENV SERVICE_USER service
 
-ADD https://raw.githubusercontent.com/articulate/docker-consul-template-bootstrap/master/install.sh /tmp/consul_template_install.sh
-ADD https://raw.githubusercontent.com/articulate/docker-consul-template-bootstrap/master/wait-for-it.sh /wait-for-it.sh
+ARG TARGETARCH
+ADD --chmod=755 https://github.com/articulate/docker-consul-template-bootstrap/releases/latest/download/docker-consul-template-bootstrap_linux_${TARGETARCH} /entrypoint
+ADD --chmod=755 https://raw.githubusercontent.com/vishnubob/wait-for-it/81b1373f17855a4dc21156cfe1694c31d7d1792e/wait-for-it.sh /wait-for-it.sh
 
-RUN bash /tmp/consul_template_install.sh && rm /tmp/consul_template_install.sh \
-    && groupadd $SERVICE_USER && useradd --create-home --home $SERVICE_ROOT --gid $SERVICE_USER --shell /bin/bash $SERVICE_USER \
-    && chmod a+rx /wait-for-it.sh
+RUN groupadd $SERVICE_USER && useradd --create-home --home $SERVICE_ROOT --gid $SERVICE_USER --shell /bin/bash $SERVICE_USER \
+    # TODO: these packages will be removed in an upcoming release
+    # if you want them, please copy to your Dockerfile
+    && apt-get update -qq \
+    && apt-get install --yes --no-install-recommends \
+        unzip sudo jq wget curl ca-certificates \
+    && apt-get clean && apt-get autoclean && apt-get -y autoremove --purge \
+    && rm -rf /var/lib/apt/lists/* /usr/share/doc /root/.cache/ \
+    && curl -s "https://awscli.amazonaws.com/awscli-exe-linux-$(uname -m).zip" -o /tmp/awscliv2.zip \
+    && unzip -d /tmp /tmp/awscliv2.zip \
+    && /tmp/aws/install \
+    && rm -rf /tmp/aws /tmp/awscliv2 /tmp/awscliv2.zip
 
 WORKDIR $SERVICE_ROOT
 
-ENTRYPOINT ["/entrypoint.sh"]
+ENTRYPOINT ["/entrypoint"]
